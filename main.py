@@ -11,8 +11,8 @@ SHUFFLE_NO = 3
 # 3. LOOP: selection, crossover, mutation, compute fitness
 
 
-# TODO Too many "Population" names!!!
-class Population():
+
+class Generation():
     def __init__(self, size):
         self._population = [self.generate_sample() for _ in range(size)]
 
@@ -94,10 +94,8 @@ class Board():
 
 if __name__ == "__main__":
     board = Board()
-    print(board._matrix)
-    board.inject_board()
-    print(board._matrix)
-    population = Population(POPULATION_SIZE)
+    print(board._items)
+    population = Generation(POPULATION_SIZE)
     for no in range(POPULATION_SIZE):
         print(f"Sample #{no}")
         print(population._population[no])
