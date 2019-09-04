@@ -1,21 +1,29 @@
 import numpy as np
-
+from random import shuffle
 # TODO Maybe move algorithm parameters to separate config file
 POPULATION_SIZE = 20
 GENERATION_COUNT = 20
-
+SHUFFLE_NO = 3
 
 # Genetic algorithm:
 # 1. generate initial population
 # 2. compute fitness
 # 3. LOOP: selection, crossover, mutation, compute fitness
 
+
+# TODO Too many "Population" names!!!
 class Population():
     def __init__(self, size):
-        def generate_sample():
-            pass
-        self._population = np.array([generate_sample() for _ in range(
-                                        POPULATION_SIZE)])
+        self._population = [self.generate_sample() for _ in range(size)]
+
+    def generate_sample(self):
+        def shuffle_sample():
+            sample = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            for _ in range(SHUFFLE_NO):
+                shuffle(sample)
+            return sample
+
+        return np.array([shuffle_sample() for _ in range(9)], dtype=np.int8)
 
 
 class Board():
@@ -80,3 +88,8 @@ if __name__ == "__main__":
     print(board._matrix)
     board.inject_board()
     print(board._matrix)
+    population = Population(POPULATION_SIZE)
+    for no in range(POPULATION_SIZE):
+        print(f"Sample #{no}")
+        print(population._population[no])
+        print("-------------------------------------")
