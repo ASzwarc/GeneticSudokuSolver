@@ -15,8 +15,9 @@ Item = namedtuple("Item", ["row", "col", "value"])
 
 
 class Generation():
-    def __init__(self, size):
+    def __init__(self, size, board):
         self._population = [self.generate_sample() for _ in range(size)]
+        self._board = board
 
     def generate_sample(self):
         def shuffle_sample():
@@ -31,15 +32,21 @@ class Generation():
         # in rows there will always be proper sum
         # calculate sum of each column, penalty is 45 - sum
         # calculate sum of each square, penaly is 45 - sum
-        # check if board's initial values are same as one in the solution
-        # penalty for missing this should be bigger than penalty for not
-        # meeting criteria for sum in squares and columns
-        pass
+        incorrect_fixed_value_penalty = -10
+        fitness = 0
+        for item in self._board.items:
+            if self._population[sample_no][item.row, item.col] != item.value:
+                fitness += incorrect_fixed_value_penalty
+        return fitness
 
 
 class Board():
     def __init__(self):
         self._items = self.inject_board()
+
+    @property
+    def items(self):
+        return self._items
 
     def inject_board(self):
         """
