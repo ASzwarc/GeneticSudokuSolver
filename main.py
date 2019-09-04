@@ -25,6 +25,15 @@ class Population():
 
         return np.array([shuffle_sample() for _ in range(9)], dtype=np.int8)
 
+    def compute_fitness(self, sample_no):
+        # in rows there will always be proper sum
+        # calculate sum of each column, penalty is 45 - sum
+        # calculate sum of each square, penaly is 45 - sum
+        # check if board's initial values are same as one in the solution
+        # penalty for missing this should be bigger than penalty for not
+        # meeting criteria for sum in squares and columns
+        pass
+
 
 class Board():
     def __init__(self):
