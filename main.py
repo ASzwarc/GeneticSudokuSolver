@@ -29,14 +29,26 @@ class Generation():
         return np.array([shuffle_sample() for _ in range(9)], dtype=np.int8)
 
     def compute_fitness(self, sample_no):
-        # in rows there will always be proper sum
-        # calculate sum of each column, penalty is 45 - sum
+        def calc_column_penalty(column_sum):
+            return 45 - column_sum
+
         # calculate sum of each square, penaly is 45 - sum
         incorrect_fixed_value_penalty = -10
         fitness = 0
+        # incorrect sum in column
+        v_calc_column_penalty = np.vectorize(calc_column_penalty)
+        fitness = np.sum(v_calc_column_penalty(np.sum(
+                    self._population[sample_no],
+                    axis=0)))
+        # incorrect sum in square
+        flat_sample = self._population[sample_no].flatten()
+        for idx in range(0, 27, 3):
+
+        # incorrect known item
         for item in self._board.items:
             if self._population[sample_no][item.row, item.col] != item.value:
                 fitness += incorrect_fixed_value_penalty
+
         return fitness
 
 
