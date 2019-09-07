@@ -13,7 +13,7 @@ class TestComputeFitness(unittest.TestCase):
         sample_no = 0
         self.generation._population[sample_no] = np.array(
             [1 for _ in range(81)], dtype=np.int8)
-        self.assertEqual(0, self.generation.compute_fitness(sample_no, board))
+        self.assertEqual(972, self.generation.compute_fitness(sample_no, board))
 
 if __name__ == '__main__':
     unittest.main()
