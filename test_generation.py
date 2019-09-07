@@ -1,13 +1,19 @@
 import unittest
-from main import Generation
+from main import Generation, Board
+import numpy as np
 
 
-class TestGeneration(unittest.TestCase):
+class TestComputeFitness(unittest.TestCase):
+    def setUp(self):
+        self.population_size = 1
+        self.generation = Generation(self.population_size)
 
-    def test_compute_fitness(self):
-        population_size = 1
-        generation = Generation(population_size)
-        self.assertEqual(True, True)
+    def test_values_in_rows_and_columns_incorrect(self):
+        board = Board()
+        sample_no = 0
+        self.generation._population[sample_no] = np.array(
+            [1 for _ in range(81)], dtype=np.int8)
+        self.assertEqual(0, self.generation.compute_fitness(sample_no, board))
 
 if __name__ == '__main__':
     unittest.main()
