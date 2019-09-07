@@ -18,6 +18,12 @@ class TestComputeFitness(unittest.TestCase):
                          self.generation.compute_fitness(self.sample_no,
                                                          self.board))
 
+        self.generation._population[self.sample_no] = np.array(
+            [9 for _ in range(81)], dtype=np.int8)
+        self.assertEqual(972,
+                         self.generation.compute_fitness(self.sample_no,
+                                                         self.board))
+
     def test_values_in_rows_and_columns_correct(self):
         sample = [1, 5, 2, 4, 8, 9, 3, 7, 6,
                   7, 3, 9, 2, 5, 6, 8, 4, 1,
@@ -61,7 +67,7 @@ class TestComputeFitness(unittest.TestCase):
         self.generation._population[self.sample_no] = np.array(
             sample, dtype=np.int8)
         self.assertEqual(
-            0, self.generation.compute_fitness(self.sample_no, self.board))
+            1176, self.generation.compute_fitness(self.sample_no, self.board))
 
     def test_known_values_correct(self):
         known_items = []

@@ -29,10 +29,9 @@ class Generation():
 
     def compute_fitness(self, sample_no, board):
         def calc_penalty(sum_in_nine):
-            return 45 - sum_in_nine
+            return abs(45 - sum_in_nine)
 
-        # calculate sum of each square, penaly is 45 - sum
-        incorrect_fixed_value_penalty = -10
+        incorrect_fixed_value_penalty = 90
         fitness = 0
         sample = np.reshape(self._population[sample_no], (9, 9))
         v_calc_penalty = np.vectorize(calc_penalty)
@@ -44,7 +43,7 @@ class Generation():
         # TODO try to vectorize it
         for row in range(0, 9, 3):
             for col in range(0, 9, 3):
-                fitness += 45 - np.sum(sample[row:row+3, col:col+3])
+                fitness += abs(45 - np.sum(sample[row:row+3, col:col+3]))
         # incorrect known item
         for item in board.items:
             if sample[item.row, item.col] != item.value:
