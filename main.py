@@ -28,26 +28,26 @@ class Generation():
         return np.array([shuffle_sample() for _ in range(9)], dtype=np.int8)
 
     def compute_fitness(self, sample_no, board):
-        def calc_column_penalty(column_sum):
-            return 45 - column_sum
+        def calc_penalty(sum_in_nine):
+            return 45 - sum_in_nine
 
         # calculate sum of each square, penaly is 45 - sum
         incorrect_fixed_value_penalty = -10
         fitness = 0
+        sample = np.reshape(self._population[sample_no], (9, 9))
+        v_calc_penalty = np.vectorize(calc_penalty)
         # incorrect sum in column
-        v_calc_column_penalty = np.vectorize(calc_column_penalty)
-        fitness = np.sum(v_calc_column_penalty(np.sum(
-                    self._population[sample_no],
-                    axis=0)))
+        fitness = np.sum(v_calc_penalty(np.sum(sample, axis=0)))
+        # incorrect sum in row
+        fitness += np.sum(v_calc_penalty(np.sum(sample, axis=1)))
         # incorrect sum in square
         # TODO try to vectorize it
         for row in range(0, 9, 3):
             for col in range(0, 9, 3):
-                fitness += 45 - np.sum(self._population[sample_no][row:row+3,
-                                                                   col:col+3])
+                fitness += 45 - np.sum(sample[row:row+3, col:col+3])
         # incorrect known item
         for item in board.items:
-            if self._population[sample_no][item.row, item.col] != item.value:
+            if sample[item.row, item.col] != item.value:
                 fitness += incorrect_fixed_value_penalty
 
         return fitness
