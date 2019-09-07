@@ -15,9 +15,8 @@ Item = namedtuple("Item", ["row", "col", "value"])
 
 
 class Generation():
-    def __init__(self, size, board):
+    def __init__(self, size):
         self._population = [self.generate_sample() for _ in range(size)]
-        self._board = board
 
     def generate_sample(self):
         def shuffle_sample():
@@ -28,7 +27,7 @@ class Generation():
 
         return np.array([shuffle_sample() for _ in range(9)], dtype=np.int8)
 
-    def compute_fitness(self, sample_no):
+    def compute_fitness(self, sample_no, board):
         def calc_column_penalty(column_sum):
             return 45 - column_sum
 
@@ -47,7 +46,7 @@ class Generation():
                 fitness += 45 - np.sum(self._population[sample_no][row:row+3,
                                                                    col:col+3])
         # incorrect known item
-        for item in self._board.items:
+        for item in board.items:
             if self._population[sample_no][item.row, item.col] != item.value:
                 fitness += incorrect_fixed_value_penalty
 
