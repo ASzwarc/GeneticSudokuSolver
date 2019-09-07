@@ -55,7 +55,7 @@ class Generation():
 
 class Board():
     def __init__(self):
-        self._items = self.inject_board()
+        self._items = []
 
     @property
     def items(self):
@@ -118,6 +118,7 @@ class Board():
 
 if __name__ == "__main__":
     board = Board()
+    board.inject_board()
     print(board._items)
     population = Generation(POPULATION_SIZE)
     for no in range(POPULATION_SIZE):
