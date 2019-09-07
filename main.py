@@ -41,9 +41,11 @@ class Generation():
                     self._population[sample_no],
                     axis=0)))
         # incorrect sum in square
-        flat_sample = self._population[sample_no].flatten()
-        for idx in range(0, 27, 3):
-
+        # TODO try to vectorize it
+        for row in range(0, 9, 3):
+            for col in range(0, 9, 3):
+                fitness += 45 - np.sum(self._population[sample_no][row:row+3,
+                                                                   col:col+3])
         # incorrect known item
         for item in self._board.items:
             if self._population[sample_no][item.row, item.col] != item.value:
