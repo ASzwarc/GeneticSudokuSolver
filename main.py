@@ -53,6 +53,15 @@ class Generation():
 
         return fitness
 
+    def evolve(self):
+        # calculate fitness
+        for chromosome_no in range(self._size):
+            self._population[chromosome_no][1] = self.compute_fitness(
+                chromosome_no)
+        # selection
+        # crossover
+        # mutation
+
 
 class Board():
     def __init__(self):
