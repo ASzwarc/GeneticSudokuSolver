@@ -5,11 +5,9 @@ from collections import namedtuple
 POPULATION_SIZE = 20
 GENERATION_COUNT = 20
 SHUFFLE_NO = 3
-
-# Genetic algorithm:
-# 1. generate initial population
-# 2. compute fitness
-# 3. LOOP: selection, crossover, mutation, compute fitness
+ELITISM_COEFF = 0.1
+DROP_OUT_COEFF = 0.5
+MUTATION_PROBABILITY = 0.1
 
 Item = namedtuple("Item", ["row", "col", "value"])
 
