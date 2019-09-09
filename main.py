@@ -26,8 +26,8 @@ class Generation():
                 shuffle(sample)
             return sample
         default_fitness: int = 10000
-        return (np.array([shuffle_sample() for _ in range(9)], dtype=np.int8),
-                default_fitness)
+        return [np.array([shuffle_sample() for _ in range(9)], dtype=np.int8),
+                default_fitness]
 
     def compute_fitness(self, sample_no):
         def calc_penalty(sum_in_nine):
@@ -35,7 +35,7 @@ class Generation():
 
         incorrect_fixed_value_penalty = 90
         fitness = 0
-        sample = np.reshape(self._population[sample_no], (9, 9))
+        sample = np.reshape(self._population[sample_no][0], (9, 9))
         v_calc_penalty = np.vectorize(calc_penalty)
         # incorrect sum in column
         fitness = np.sum(v_calc_penalty(np.sum(sample, axis=0)))
@@ -120,9 +120,9 @@ class Board():
 if __name__ == "__main__":
     board = Board()
     board.inject_board()
-    print(board._items)
-    population = Generation(POPULATION_SIZE)
+    population = Generation(POPULATION_SIZE, board)
+    population.evolve()
     for no in range(POPULATION_SIZE):
-        print(f"Sample #{no}")
-        print(population._population[no])
+        print(f"Sample #{no} fitness = {population._population[no][1]}")
+        print(population._population[no][0])
         print("-------------------------------------")
