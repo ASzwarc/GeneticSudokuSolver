@@ -9,6 +9,7 @@ SHUFFLE_NO = 3
 ELITISM_COEFF = 0.1
 DROP_OUT_COEFF = 0.5
 MUTATION_PROBABILITY = 0.1
+DEFAULT_FITNESS = 10000
 
 Item = namedtuple("Item", ["row", "col", "value"])
 
@@ -25,9 +26,9 @@ class Generation():
             for _ in range(SHUFFLE_NO):
                 shuffle(sample)
             return sample
-        default_fitness: int = 10000
+
         return [np.array([shuffle_sample() for _ in range(9)], dtype=np.int8),
-                default_fitness]
+                DEFAULT_FITNESS]
 
     def compute_fitness(self, sample_no):
         def calc_penalty(sum_in_nine):
@@ -51,13 +52,12 @@ class Generation():
             if sample[item.row, item.col] != item.value:
                 fitness += incorrect_fixed_value_penalty
 
-        return fitness
+        self._population[sample_no][1] = fitness
 
     def evolve(self):
         # calculate fitness
         for chromosome_no in range(self._size):
-            self._population[chromosome_no][1] = self.compute_fitness(
-                chromosome_no)
+            self.compute_fitness(chromosome_no)
         # selection
         # crossover
         # mutation
