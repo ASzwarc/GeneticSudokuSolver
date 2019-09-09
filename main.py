@@ -1,3 +1,4 @@
+from __future__ import annotations
 import numpy as np
 from random import shuffle
 from collections import namedtuple
@@ -13,8 +14,10 @@ Item = namedtuple("Item", ["row", "col", "value"])
 
 
 class Generation():
-    def __init__(self, size):
-        self._population = [self.generate_sample() for _ in range(size)]
+    def __init__(self, size: int, board: Board):
+        self._board = board
+        self._size = size
+        self._population = [self.generate_sample() for _ in range(self._size)]
 
     def generate_sample(self):
         def shuffle_sample():
@@ -26,7 +29,7 @@ class Generation():
         return (np.array([shuffle_sample() for _ in range(9)], dtype=np.int8),
                 default_fitness)
 
-    def compute_fitness(self, sample_no, board):
+    def compute_fitness(self, sample_no):
         def calc_penalty(sum_in_nine):
             return abs(45 - sum_in_nine)
 
@@ -44,7 +47,7 @@ class Generation():
             for col in range(0, 9, 3):
                 fitness += abs(45 - np.sum(sample[row:row+3, col:col+3]))
         # incorrect known item
-        for item in board.items:
+        for item in self._board.items:
             if sample[item.row, item.col] != item.value:
                 fitness += incorrect_fixed_value_penalty
 
@@ -112,7 +115,7 @@ class Board():
         board.append(Item._make([8, 4, 1]))
         board.append(Item._make([8, 5, 8]))
 
-        return board
+        self._items = board.copy()
 
 if __name__ == "__main__":
     board = Board()
