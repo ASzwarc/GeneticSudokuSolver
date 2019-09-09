@@ -22,8 +22,9 @@ class Generation():
             for _ in range(SHUFFLE_NO):
                 shuffle(sample)
             return sample
-
-        return np.array([shuffle_sample() for _ in range(9)], dtype=np.int8)
+        default_fitness: int = 10000
+        return (np.array([shuffle_sample() for _ in range(9)], dtype=np.int8),
+                default_fitness)
 
     def compute_fitness(self, sample_no, board):
         def calc_penalty(sum_in_nine):
