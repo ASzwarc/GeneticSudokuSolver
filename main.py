@@ -55,9 +55,18 @@ class Generation():
         self._population[sample_no][1] = fitness
 
     def evolve(self):
+        def use_fitness(elem):
+            return elem[1]
         # calculate fitness
         for chromosome_no in range(self._size):
             self.compute_fitness(chromosome_no)
+        new_population = []
+        self._population.sort(key=use_fitness)
+        # elitism
+        for chromosome_no in range(int(GENERATION_COUNT * ELITISM_COEFF)):
+            new_population.append([self._population[chromosome_no][0],
+                                   DEFAULT_FITNESS])
+        self._population = new_population.copy()
         # selection
         # crossover
         # mutation
@@ -131,7 +140,7 @@ if __name__ == "__main__":
     board.inject_board()
     population = Generation(POPULATION_SIZE, board)
     population.evolve()
-    for no in range(POPULATION_SIZE):
+    for no in range(len(population._population)):
         print(f"Sample #{no} fitness = {population._population[no][1]}")
         print(population._population[no][0])
         print("-------------------------------------")
