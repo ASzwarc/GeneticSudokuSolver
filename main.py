@@ -54,18 +54,26 @@ class Generation():
 
         self._population[sample_no][1] = fitness
 
-    def evolve(self):
+    def _compute_population_fitness(self):
         def use_fitness(elem):
             return elem[1]
         # calculate fitness
         for chromosome_no in range(self._size):
-            self.compute_fitness(chromosome_no)
-        new_population = []
+            self.compute_chromosome_fitness(chromosome_no)
         self._population.sort(key=use_fitness)
-        # elitism
+
+    def _get_elite(self):
+        elite = []
         for chromosome_no in range(int(GENERATION_COUNT * ELITISM_COEFF)):
-            new_population.append([self._population[chromosome_no][0],
-                                   DEFAULT_FITNESS])
+            elite.append([self._population[chromosome_no][0],
+                          DEFAULT_FITNESS])
+        return elite
+
+    def evolve(self):
+        new_population = []
+        self._compute_population_fitness()
+        # elitism
+        new_population += self._get_elite()
         self._population = new_population.copy()
         # selection
         # crossover
