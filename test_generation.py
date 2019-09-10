@@ -14,13 +14,13 @@ class TestComputeFitness(unittest.TestCase):
     def test_values_in_rows_and_columns_incorrect(self):
         self.generation._population[self.sample_no] = [np.array(
             [1 for _ in range(81)], dtype=np.int8), DEFAULT_FITNESS]
-        self.generation.compute_fitness(self.sample_no)
+        self.generation.compute_chromosome_fitness(self.sample_no)
         self.assertEqual(972,
                          self.generation._population[self.sample_no][1])
 
         self.generation._population[self.sample_no] = [np.array(
             [9 for _ in range(81)], dtype=np.int8), DEFAULT_FITNESS]
-        self.generation.compute_fitness(self.sample_no)
+        self.generation.compute_chromosome_fitness(self.sample_no)
         self.assertEqual(972,
                          self.generation._population[self.sample_no][1])
 
@@ -36,7 +36,7 @@ class TestComputeFitness(unittest.TestCase):
                   8, 7, 3, 5, 1, 2, 9, 6, 4]
         self.generation._population[self.sample_no] = [np.array(
             sample, dtype=np.int8), DEFAULT_FITNESS]
-        self.generation.compute_fitness(self.sample_no)
+        self.generation.compute_chromosome_fitness(self.sample_no)
         self.assertEqual(
             0, self.generation._population[self.sample_no][1])
 
@@ -67,7 +67,7 @@ class TestComputeFitness(unittest.TestCase):
                   8, 7, 3, 5, 1, 2, 9, 6, 1]
         self.generation._population[self.sample_no] = [np.array(
             sample, dtype=np.int8), DEFAULT_FITNESS]
-        self.generation.compute_fitness(self.sample_no)
+        self.generation.compute_chromosome_fitness(self.sample_no)
         self.assertEqual(
             1176, self.generation._population[self.sample_no][1])
 
@@ -98,7 +98,7 @@ class TestComputeFitness(unittest.TestCase):
                   8, 7, 3, 5, 1, 2, 9, 6, 4]
         self.generation._population[self.sample_no] = [np.array(
             sample, dtype=np.int8), DEFAULT_FITNESS]
-        self.generation.compute_fitness(self.sample_no)
+        self.generation.compute_chromosome_fitness(self.sample_no)
         self.assertEqual(
             0, self.generation._population[self.sample_no][1])
 

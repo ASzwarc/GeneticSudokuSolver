@@ -30,7 +30,7 @@ class Generation():
         return [np.array([shuffle_sample() for _ in range(9)], dtype=np.int8),
                 DEFAULT_FITNESS]
 
-    def compute_fitness(self, sample_no):
+    def compute_chromosome_fitness(self, sample_no):
         def calc_penalty(sum_in_nine):
             return abs(45 - sum_in_nine)
 
