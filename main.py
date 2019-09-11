@@ -71,15 +71,15 @@ class Generation():
 
     def _select_fittest(self):
         chromosome_count = int(GENERATION_COUNT * DROP_OUT_COEFF)
-        fittest_count = int(GENERATION_COUNT * (1 - ELITISM_COEFF))
+        parents_count = 2
         fittest = choices(self._population[0:chromosome_count],
-                          k=fittest_count)
-        return [[item[0], DEFAULT_FITNESS] for item in fittest]
+                          k=parents_count)
+        return [item[0] for item in fittest]
 
     def _create_child(self, parent1, parent2):
         # TODO Think how crossover point should look like!!!
         # Crossover point: split sudoku table in half horizontally
-        new_child = [np.array([0 for _ in range(9)], dtype=np.int8),
+        new_child = [np.array([[0] * 9 for _ in range(9)], dtype=np.int8),
                      DEFAULT_FITNESS]
         random_number = random()
         if random_number <= CROSSOVER_PROBABILITY:
@@ -98,11 +98,11 @@ class Generation():
         self._compute_population_fitness()
         # elitism
         new_population += self._get_elite()
-        # selection
-        fittest = self._select_fittest()
-        # crossover
-        # mutation
-        self._population = fittest.copy()
+        # selection, crossover, mutation
+        for elem in range(int(GENERATION_COUNT * (1 - ELITISM_COEFF))):
+            fittest_parents = self._select_fittest()
+            new_population.append(self._create_child(*fittest_parents))
+        self._population = new_population.copy()
 
 
 class Board():
