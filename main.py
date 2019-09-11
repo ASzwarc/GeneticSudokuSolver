@@ -1,6 +1,6 @@
 from __future__ import annotations
 import numpy as np
-from random import shuffle
+from random import shuffle, choices
 from collections import namedtuple
 # TODO Maybe move algorithm parameters to separate config file
 POPULATION_SIZE = 20
@@ -57,7 +57,6 @@ class Generation():
     def _compute_population_fitness(self):
         def use_fitness(elem):
             return elem[1]
-        # calculate fitness
         for chromosome_no in range(self._size):
             self.compute_chromosome_fitness(chromosome_no)
         self._population.sort(key=use_fitness)
@@ -69,13 +68,21 @@ class Generation():
                           DEFAULT_FITNESS])
         return elite
 
+    def _select_fittest(self):
+        chromosome_count = int(GENERATION_COUNT * DROP_OUT_COEFF)
+        fittest_count = int(GENERATION_COUNT * (1 - ELITISM_COEFF))
+        fittest = choices(self._population[0:chromosome_count],
+                          k=fittest_count)
+        return [[item[0], DEFAULT_FITNESS] for item in fittest]
+
     def evolve(self):
         new_population = []
         self._compute_population_fitness()
         # elitism
         new_population += self._get_elite()
-        self._population = new_population.copy()
         # selection
+        fittest = self._select_fittest()
+        self._population = fittest.copy()
         # crossover
         # mutation
 
