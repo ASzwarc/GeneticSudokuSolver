@@ -1,6 +1,6 @@
 from __future__ import annotations
 import numpy as np
-from random import shuffle, choices
+from random import shuffle, choices, random
 from collections import namedtuple
 # TODO Maybe move algorithm parameters to separate config file
 POPULATION_SIZE = 20
@@ -9,6 +9,7 @@ SHUFFLE_NO = 3
 ELITISM_COEFF = 0.1
 DROP_OUT_COEFF = 0.5
 MUTATION_PROBABILITY = 0.1
+CROSSOVER_PROBABILITY = (1.0 - MUTATION_PROBABILITY) / 2.0
 DEFAULT_FITNESS = 10000
 
 Item = namedtuple("Item", ["row", "col", "value"])
@@ -75,6 +76,23 @@ class Generation():
                           k=fittest_count)
         return [[item[0], DEFAULT_FITNESS] for item in fittest]
 
+    def _create_child(self, parent1, parent2):
+        # TODO Think how crossover point should look like!!!
+        # Crossover point: split sudoku table in half horizontally
+        new_child = [np.array([0 for _ in range(9)], dtype=np.int8),
+                     DEFAULT_FITNESS]
+        random_number = random()
+        if random_number <= CROSSOVER_PROBABILITY:
+            # upper part from parent1 and bottom from parent2
+            pass
+        elif random_number <= (2.0 * CROSSOVER_PROBABILITY):
+            # upper part from parent2 and bottom from parent1
+            pass
+        else:
+            # mutate but I don't know how!!!
+            pass
+        return new_child
+
     def evolve(self):
         new_population = []
         self._compute_population_fitness()
@@ -82,9 +100,9 @@ class Generation():
         new_population += self._get_elite()
         # selection
         fittest = self._select_fittest()
-        self._population = fittest.copy()
         # crossover
         # mutation
+        self._population = fittest.copy()
 
 
 class Board():
