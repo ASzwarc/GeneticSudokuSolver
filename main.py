@@ -19,9 +19,23 @@ class Generation():
     def __init__(self, size: int, board: Board):
         self._board = board
         self._size = size
-        self._population = [self.generate_sample() for _ in range(self._size)]
+        self._population = [self.generate_chromosome()
+                            for _ in range(self._size)]
 
-    def generate_sample(self):
+    def _generate_row() -> List[int]:
+        """
+        Generates random row by shuffling sample number of times defined by
+        constant SHUFFLE_NO.
+
+        Returns:
+            List[int] -- random row.
+        """
+        sample = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        for _ in range(SHUFFLE_NO):
+            shuffle(sample)
+        return sample
+
+    def generate_chromosome(self):
         """
         Generates random chromosome. Number of input list shuffles is defined
         by constant SHUFFLE_NO
@@ -30,14 +44,8 @@ class Generation():
             List[np.array, default_fitness] -- Randomly generated chromosome
             with default fitness assigned.
         """
-        def shuffle_sample() -> List[int]:
-            sample = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-            for _ in range(SHUFFLE_NO):
-                shuffle(sample)
-            return sample
-
-        return [np.array([shuffle_sample() for _ in range(9)], dtype=np.int8),
-                DEFAULT_FITNESS]
+        return [np.array([self._generate_row() for _ in range(9)],
+                         dtype=np.int8), DEFAULT_FITNESS]
 
     def compute_chromosome_fitness(self, sample_no: int):
         """
