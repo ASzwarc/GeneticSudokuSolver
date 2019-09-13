@@ -159,9 +159,14 @@ class Generation():
         2. chose elite chromosomes,
         3. select fittest parents,
         4. create new children using crossover or mutation.
+
+        Returns:
+            bool - True in case fitness of fittest element is 0,
+            False otherwise. Fitness == 0 means that convergence was reached.
         """
         new_population = []
-        self._compute_population_fitness()
+        if self._compute_population_fitness():
+            return True
         # elitism
         new_population += self._get_elite()
         # selection, crossover, mutation
@@ -170,6 +175,7 @@ class Generation():
             new_population.append([self._create_child(*fittest_parents),
                                    DEFAULT_FITNESS])
         self._population = new_population.copy()
+        return False
 
 
 class Board():
