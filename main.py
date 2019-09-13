@@ -241,6 +241,24 @@ class Board():
 
         self._items = board.copy()
 
+
+class GeneticSolution():
+    def __init__(self, board: Board):
+        self._board = board
+        self._generation = Generation(POPULATION_SIZE, self._board)
+
+    def run(self):
+        # TODO Add time measurement
+        max_no_of_generations = 10000
+        solution_found = False
+        generation_no = 0
+        while not solution_found or generation_no <= max_no_of_generations:
+            solution_found = self._generation.evolve()
+            generation_no += 1
+        if solution_found:
+            print(f"Solution found in {generation_no} generations!")
+            # TODO Add printing of solution
+
 if __name__ == "__main__":
     board = Board()
     board.inject_board()
