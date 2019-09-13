@@ -22,7 +22,7 @@ class Generation():
         self._population = [self.generate_chromosome()
                             for _ in range(self._size)]
 
-    def _generate_row() -> List[int]:
+    def _generate_row(self) -> List[int]:
         """
         Generates random row by shuffling sample number of times defined by
         constant SHUFFLE_NO.
@@ -79,13 +79,14 @@ class Generation():
 
         self._population[sample_no][1] = fitness
 
-    def _compute_population_fitness(self):
+    def _compute_population_fitness(self) -> bool:
         """
         Computes fitness of whole population using function compute_chromosome
         fitness and sorts them in descending order.
 
         Returns:
-            None
+            bool - True in case fitness of fittest element is 0,
+            False otherwise. Fitness == 0 means that convergence was found.
         """
         def use_fitness(elem: int):
             return elem[1]
@@ -93,6 +94,10 @@ class Generation():
         for chromosome_no in range(self._size):
             self.compute_chromosome_fitness(chromosome_no)
         self._population.sort(key=use_fitness)
+        if self._population[0][1] == 0:
+            return True
+        else:
+            return False
 
     def _get_elite(self):
         """
@@ -132,23 +137,20 @@ class Generation():
             parent2 {List[np.array, fitness]} -- second parent.
 
         Returns:
-            List[np.array, fitness] -- newly created child.
+            np.array -- newly created child.
         """
         # TODO Think how crossover point should look like!!!
-        # Crossover point: split sudoku table in half horizontally
-        new_child = [np.array([[0] * 9 for _ in range(9)], dtype=np.int8),
-                     DEFAULT_FITNESS]
-        random_number = random()
-        if random_number <= CROSSOVER_PROBABILITY:
-            # upper part from parent1 and bottom from parent2
-            pass
-        elif random_number <= (2.0 * CROSSOVER_PROBABILITY):
-            # upper part from parent2 and bottom from parent1
-            pass
-        else:
-            # mutate but I don't know how!!!
-            pass
-        return new_child
+        child = np.empty((9, 9), dtype=np.int8)
+        for row in range(9):
+            random_number = random()
+            if random_number <= CROSSOVER_PROBABILITY:
+                child[row] = parent1[0][row, :].copy()
+            elif random_number <= (2.0 * CROSSOVER_PROBABILITY):
+                child[row] = parent2[0][row, :].copy()
+            else:
+                child[row] = np.array(self._generate_row(),
+                                      dtype=np.int8).copy()
+        return child
 
     def evolve(self):
         """
@@ -165,7 +167,8 @@ class Generation():
         # selection, crossover, mutation
         for elem in range(int(GENERATION_COUNT * (1 - ELITISM_COEFF))):
             fittest_parents = self._select_fittest()
-            new_population.append(self._create_child(*fittest_parents))
+            new_population.append([self._create_child(*fittest_parents),
+                                   DEFAULT_FITNESS])
         self._population = new_population.copy()
 
 
