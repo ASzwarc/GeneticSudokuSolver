@@ -22,7 +22,15 @@ class Generation():
         self._population = [self.generate_sample() for _ in range(self._size)]
 
     def generate_sample(self):
-        def shuffle_sample():
+        """
+        Generates random chromosome. Number of input list shuffles is defined
+        by constant SHUFFLE_NO
+
+        Returns:
+            List[np.array, default_fitness] -- Randomly generated chromosome
+            with default fitness assigned.
+        """
+        def shuffle_sample() -> List[int]:
             sample = [1, 2, 3, 4, 5, 6, 7, 8, 9]
             for _ in range(SHUFFLE_NO):
                 shuffle(sample)
@@ -31,8 +39,16 @@ class Generation():
         return [np.array([shuffle_sample() for _ in range(9)], dtype=np.int8),
                 DEFAULT_FITNESS]
 
-    def compute_chromosome_fitness(self, sample_no):
-        def calc_penalty(sum_in_nine):
+    def compute_chromosome_fitness(self, sample_no: int):
+        """
+        Function for computing chromosome's fittness.
+        The fitter the chromosome is the lower the score.
+
+        Arguments:
+            sample_no {int} -- number of chromosome which fitness should be
+            calculated
+        """
+        def calc_penalty(sum_in_nine: int) -> int:
             return abs(45 - sum_in_nine)
 
         incorrect_fixed_value_penalty = 90
@@ -56,13 +72,29 @@ class Generation():
         self._population[sample_no][1] = fitness
 
     def _compute_population_fitness(self):
-        def use_fitness(elem):
+        """
+        Computes fitness of whole population using function compute_chromosome
+        fitness and sorts them in descending order.
+
+        Returns:
+            None
+        """
+        def use_fitness(elem: int):
             return elem[1]
+
         for chromosome_no in range(self._size):
             self.compute_chromosome_fitness(chromosome_no)
         self._population.sort(key=use_fitness)
 
     def _get_elite(self):
+        """
+        Returns list of most elite chromosomes from population. Number of elite
+        chromosomes is defined by constant ELITISM_COEFF.
+
+        Returns:
+            List[[np.array, default_fitness]] -- List of most elite chromosomes
+            with default fitness assigned.
+        """
         elite = []
         for chromosome_no in range(int(GENERATION_COUNT * ELITISM_COEFF)):
             elite.append([self._population[chromosome_no][0],
@@ -70,6 +102,13 @@ class Generation():
         return elite
 
     def _select_fittest(self):
+        """
+        Selects 2 random parents from the fittest chromosomes in population.
+        Number of fittest chromosomes is defined by constant DROP_OUT_COEFF.
+
+        Returns:
+            List[[np.array, fitness]] -- List of parents.
+        """
         chromosome_count = int(GENERATION_COUNT * DROP_OUT_COEFF)
         parents_count = 2
         fittest = choices(self._population[0:chromosome_count],
@@ -77,6 +116,16 @@ class Generation():
         return [item[0] for item in fittest]
 
     def _create_child(self, parent1, parent2):
+        """
+        Creates child using crossover or mutation (it depends on probability)
+
+        Arguments:
+            parent1 {List[np.array, fitness]} -- first parent.
+            parent2 {List[np.array, fitness]} -- second parent.
+
+        Returns:
+            List[np.array, fitness] -- newly created child.
+        """
         # TODO Think how crossover point should look like!!!
         # Crossover point: split sudoku table in half horizontally
         new_child = [np.array([[0] * 9 for _ in range(9)], dtype=np.int8),
@@ -94,6 +143,13 @@ class Generation():
         return new_child
 
     def evolve(self):
+        """
+        Function for executing main loop of genetic algorithm which is:
+        1. calculation of population fitnes,
+        2. chose elite chromosomes,
+        3. select fittest parents,
+        4. create new children using crossover or mutation.
+        """
         new_population = []
         self._compute_population_fitness()
         # elitism
