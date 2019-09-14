@@ -5,20 +5,27 @@ import time
 from collections import namedtuple
 # TODO Maybe move algorithm parameters to separate config file
 POPULATION_SIZE = 20
-GENERATION_COUNT = 20
-SHUFFLE_NO = 3
 ELITISM_COEFF = 0.1
 DROP_OUT_COEFF = 0.5
 MUTATION_PROBABILITY = 0.1
 CROSSOVER_PROBABILITY = (1.0 - MUTATION_PROBABILITY) / 2.0
-DEFAULT_FITNESS = 10000
-
 
 Item = namedtuple("Item", ["row", "col", "value"])
 
 
 class Generation():
-    def __init__(self, size: int, board: Board):
+    SHUFFLE_NO = 3
+    DEFAULT_FITNESS = 10000
+
+    def __init__(self,
+                 size: int,
+                 board: Board,
+                 elite: int,
+                 drop_out: int,
+                 crossover: int):
+        self._elite = elite
+        self._drop_out = drop_out
+        self._crossover = crossover
         self._board = board
         self._size = size
         self._population = [self.generate_chromosome()
@@ -33,21 +40,20 @@ class Generation():
             List[int] -- random row.
         """
         sample = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        for _ in range(SHUFFLE_NO):
+        for _ in range(Generation.SHUFFLE_NO):
             shuffle(sample)
         return sample
 
     def generate_chromosome(self):
         """
-        Generates random chromosome. Number of input list shuffles is defined
-        by constant SHUFFLE_NO
+        Generates random chromosome.
 
         Returns:
             List[np.array, default_fitness] -- Randomly generated chromosome
             with default fitness assigned.
         """
         return [np.array([self._generate_row() for _ in range(9)],
-                         dtype=np.int8), DEFAULT_FITNESS]
+                         dtype=np.int8), Generation.DEFAULT_FITNESS]
 
     def compute_chromosome_fitness(self, sample_no: int):
         """
@@ -109,27 +115,27 @@ class Generation():
     def _get_elite(self):
         """
         Returns list of most elite chromosomes from population. Number of elite
-        chromosomes is defined by constant ELITISM_COEFF.
+        chromosomes is defined by variable _elite.
 
         Returns:
             List[[np.array, default_fitness]] -- List of most elite chromosomes
             with default fitness assigned.
         """
         elite = []
-        for chromosome_no in range(int(GENERATION_COUNT * ELITISM_COEFF)):
+        for chromosome_no in range(int(self._size * self._elite)):
             elite.append([self._population[chromosome_no][0],
-                          DEFAULT_FITNESS])
+                          Generation.DEFAULT_FITNESS])
         return elite
 
     def _select_fittest(self):
         """
         Selects 2 random parents from the fittest chromosomes in population.
-        Number of fittest chromosomes is defined by constant DROP_OUT_COEFF.
+        Number of fittest chromosomes is defined by variable _drop_out.
 
         Returns:
             List[np.array] -- List of parents.
         """
-        chromosome_count = int(GENERATION_COUNT * DROP_OUT_COEFF)
+        chromosome_count = int(self._size * self._drop_out)
         parents_count = 2
         fittest = choices(self._population[0:chromosome_count],
                           k=parents_count)
@@ -150,9 +156,9 @@ class Generation():
         child = np.empty((9, 9), dtype=np.int8)
         for row in range(9):
             random_number = random()
-            if random_number <= CROSSOVER_PROBABILITY:
+            if random_number <= self._crossover:
                 child[row] = parent1[row, :].copy()
-            elif random_number <= (2.0 * CROSSOVER_PROBABILITY):
+            elif random_number <= (2.0 * self._crossover):
                 child[row] = parent2[row, :].copy()
             else:
                 child[row] = np.array(self._generate_row(),
@@ -175,10 +181,10 @@ class Generation():
         # elitism
         new_population += self._get_elite()
         # selection, crossover, mutation
-        for elem in range(int(GENERATION_COUNT * (1 - ELITISM_COEFF))):
+        for elem in range(int(self._size * (1 - self._elite))):
             fittest_parents = self._select_fittest()
             new_population.append([self._create_child(*fittest_parents),
-                                   DEFAULT_FITNESS])
+                                   Generation.DEFAULT_FITNESS])
         self._population = new_population.copy()
         return fittest_chromosome
 
@@ -250,7 +256,11 @@ class Board():
 class GeneticSolution():
     def __init__(self, board: Board):
         self._board = board
-        self._generation = Generation(POPULATION_SIZE, self._board)
+        self._generation = Generation(POPULATION_SIZE,
+                                      self._board,
+                                      ELITISM_COEFF,
+                                      DROP_OUT_COEFF,
+                                      CROSSOVER_PROBABILITY)
 
     def run(self):
         max_no_of_generations = 10000
