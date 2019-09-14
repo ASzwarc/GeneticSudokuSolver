@@ -1,6 +1,7 @@
 from __future__ import annotations
 import numpy as np
 from random import shuffle, choices, random
+import time
 from collections import namedtuple
 # TODO Maybe move algorithm parameters to separate config file
 POPULATION_SIZE = 20
@@ -252,9 +253,9 @@ class GeneticSolution():
         self._generation = Generation(POPULATION_SIZE, self._board)
 
     def run(self):
-        # TODO Add time measurement
         max_no_of_generations = 10000
         generation_no = 0
+        start_time = time.time()
         while generation_no <= max_no_of_generations:
             fittest = self._generation.evolve()
             generation_no += 1
@@ -262,12 +263,18 @@ class GeneticSolution():
             print(f"Generation {generation_no} - fittest {fittest[1]}")
             print("-------------------------------------")
             if fittest[1] == 0:
+                stop_time = time.time()
+                run_time = stop_time - start_time
                 print(f"Solution found in {generation_no} generations!")
                 print(fittest[0])
+                print(f"Elapsed time: {run_time: .3f}s")
                 return
+        stop_time = time.time()
+        run_time = stop_time - start_time
         print(f"Solution couldn't be found in {generation_no} generations")
         print(f"Fitnes of best solution: {fittest[1]}")
         print(fittest[0])
+        print(f"Elapsed time: {run_time: .3f}s")
 
 if __name__ == "__main__":
     board = Board()
