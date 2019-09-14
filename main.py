@@ -71,6 +71,7 @@ class Generation():
             return 9 - np.unique(array).shape[0]
 
         incorrect_fixed_value_penalty = 90
+        duplicate_penalty = 40
         fitness = 0
         # ? This reshape is needed???
         sample = np.reshape(self._population[sample_no][0], (9, 9))
@@ -90,13 +91,13 @@ class Generation():
                 fitness += incorrect_fixed_value_penalty
         # duplicated values
         for row in range(9):
-            fitness += calc_duplicates(sample[row, :])
+            fitness += calc_duplicates(sample[row, :]) * duplicate_penalty
         for col in range(9):
-            fitness += calc_duplicates(sample[:, col])
+            fitness += calc_duplicates(sample[:, col]) * duplicate_penalty
         for row in range(0, 9, 3):
             for col in range(0, 9, 3):
                 fitness += calc_duplicates(sample[row:row+3, col:col+3].
-                                           flatten())
+                                           flatten()) * duplicate_penalty
         self._population[sample_no][1] = fitness
 
     def get_fittest(self):
