@@ -5,7 +5,7 @@ Goal of this project is to create genetic algorithm which will solve sudoku. I h
 
 # TODO
 - [ ] Basic structure
-- [ ] Generation of Sudoku board
+- [x] Generation of Sudoku board
 - [x] Fitness function
-- [ ] Genetic algorithm
+- [x] Genetic algorithm
 - [ ] Some kind of visualisation
