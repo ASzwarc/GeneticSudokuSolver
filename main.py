@@ -67,8 +67,12 @@ class Generation():
         def calc_penalty(sum_in_nine: int) -> int:
             return abs(45 - sum_in_nine)
 
+        def calc_duplicates(array) -> int:
+            return 9 - np.unique(array).shape[0]
+
         incorrect_fixed_value_penalty = 90
         fitness = 0
+        # ? This reshape is needed???
         sample = np.reshape(self._population[sample_no][0], (9, 9))
         v_calc_penalty = np.vectorize(calc_penalty)
         # incorrect sum in column
@@ -84,7 +88,15 @@ class Generation():
         for item in self._board.items:
             if sample[item.row, item.col] != item.value:
                 fitness += incorrect_fixed_value_penalty
-
+        # duplicated values
+        for row in range(9):
+            fitness += calc_duplicates(sample[row, :])
+        for col in range(9):
+            fitness += calc_duplicates(sample[:, col])
+        for row in range(0, 9, 3):
+            for col in range(0, 9, 3):
+                fitness += calc_duplicates(sample[row:row+3, col:col+3].
+                                           flatten())
         self._population[sample_no][1] = fitness
 
     def get_fittest(self):
