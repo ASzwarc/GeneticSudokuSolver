@@ -12,6 +12,7 @@ MUTATION_PROBABILITY = 0.1
 CROSSOVER_PROBABILITY = (1.0 - MUTATION_PROBABILITY) / 2.0
 DEFAULT_FITNESS = 10000
 
+
 Item = namedtuple("Item", ["row", "col", "value"])
 
 
@@ -79,14 +80,22 @@ class Generation():
 
         self._population[sample_no][1] = fitness
 
+    def get_fittest(self):
+        """
+        Returns fittest element.
+
+        Returns:
+            List[np.array, int] -- fittest chromosome with its fitness.
+        """
+        return self._population[0]
+
     def _compute_population_fitness(self) -> bool:
         """
         Computes fitness of whole population using function compute_chromosome
         fitness and sorts them in descending order.
 
         Returns:
-            bool - True in case fitness of fittest element is 0,
-            False otherwise. Fitness == 0 means that convergence was found.
+            List[np.array, int] -- fittest chromosome with its fitness.
         """
         def use_fitness(elem: int):
             return elem[1]
@@ -94,10 +103,7 @@ class Generation():
         for chromosome_no in range(self._size):
             self.compute_chromosome_fitness(chromosome_no)
         self._population.sort(key=use_fitness)
-        if self._population[0][1] == 0:
-            return True
-        else:
-            return False
+        return self.get_fittest()
 
     def _get_elite(self):
         """
@@ -120,7 +126,7 @@ class Generation():
         Number of fittest chromosomes is defined by constant DROP_OUT_COEFF.
 
         Returns:
-            List[[np.array, fitness]] -- List of parents.
+            List[np.array] -- List of parents.
         """
         chromosome_count = int(GENERATION_COUNT * DROP_OUT_COEFF)
         parents_count = 2
@@ -133,8 +139,8 @@ class Generation():
         Creates child using crossover or mutation (it depends on probability)
 
         Arguments:
-            parent1 {List[np.array, fitness]} -- first parent.
-            parent2 {List[np.array, fitness]} -- second parent.
+            parent1 {np.array} -- first parent.
+            parent2 {np.array} -- second parent.
 
         Returns:
             np.array -- newly created child.
@@ -144,9 +150,9 @@ class Generation():
         for row in range(9):
             random_number = random()
             if random_number <= CROSSOVER_PROBABILITY:
-                child[row] = parent1[0][row, :].copy()
+                child[row] = parent1[row, :].copy()
             elif random_number <= (2.0 * CROSSOVER_PROBABILITY):
-                child[row] = parent2[0][row, :].copy()
+                child[row] = parent2[row, :].copy()
             else:
                 child[row] = np.array(self._generate_row(),
                                       dtype=np.int8).copy()
@@ -161,12 +167,10 @@ class Generation():
         4. create new children using crossover or mutation.
 
         Returns:
-            bool - True in case fitness of fittest element is 0,
-            False otherwise. Fitness == 0 means that convergence was reached.
+            List[np.array, int] -- fittest chromosome with its fitness.
         """
         new_population = []
-        if self._compute_population_fitness():
-            return True
+        fittest_chromosome = self._compute_population_fitness()
         # elitism
         new_population += self._get_elite()
         # selection, crossover, mutation
@@ -175,7 +179,7 @@ class Generation():
             new_population.append([self._create_child(*fittest_parents),
                                    DEFAULT_FITNESS])
         self._population = new_population.copy()
-        return False
+        return fittest_chromosome
 
 
 class Board():
@@ -250,21 +254,23 @@ class GeneticSolution():
     def run(self):
         # TODO Add time measurement
         max_no_of_generations = 10000
-        solution_found = False
         generation_no = 0
-        while not solution_found or generation_no <= max_no_of_generations:
-            solution_found = self._generation.evolve()
+        while generation_no <= max_no_of_generations:
+            fittest = self._generation.evolve()
             generation_no += 1
-        if solution_found:
-            print(f"Solution found in {generation_no} generations!")
-            # TODO Add printing of solution
+            print("-------------------------------------")
+            print(f"Generation {generation_no} - fittest {fittest[1]}")
+            print("-------------------------------------")
+            if fittest[1] == 0:
+                print(f"Solution found in {generation_no} generations!")
+                print(fittest[0])
+                return
+        print(f"Solution couldn't be found in {generation_no} generations")
+        print(f"Fitnes of best solution: {fittest[1]}")
+        print(fittest[0])
 
 if __name__ == "__main__":
     board = Board()
     board.inject_board()
-    population = Generation(POPULATION_SIZE, board)
-    population.evolve()
-    for no in range(len(population._population)):
-        print(f"Sample #{no} fitness = {population._population[no][1]}")
-        print(population._population[no][0])
-        print("-------------------------------------")
+    algorithm = GeneticSolution(board)
+    algorithm.run()
