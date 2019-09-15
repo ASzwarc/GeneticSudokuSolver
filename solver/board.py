@@ -4,20 +4,30 @@ Item = namedtuple("Item", ["row", "col", "value"])
 
 
 class Board():
+    """
+    Class for holding already filled sudoku board elements.
+    """
     def __init__(self):
+        """
+        Empty initialises Board.
+        """
         self._items = []
 
     @property
     def items(self):
+        """
+        Items getter.
+        Returns:
+            List[Item] -- returns list of already filled elements.
+        """
         return self._items
 
     def inject_board(self):
         """
-        Helper function for injecting solvable sudoku board.
-        Board taken from this page, section "Easiest":
-        https://dingo.sbs.arizona.edu/~sandiway/sudoku/examples.html
+        Injects predefined sudoku board.
         """
-
+        # Board taken from this page, section "Easiest":
+        # https://dingo.sbs.arizona.edu/~sandiway/sudoku/examples.html
         board = []
         board.append(Item._make([0, 3, 2]))
         board.append(Item._make([0, 4, 6]))

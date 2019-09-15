@@ -5,15 +5,29 @@ from solver.board import Board
 
 
 class Generation():
+    """
+    Class holding population of chromosomes and responsible for executing
+    genetic algorithm's main loop.
+    """
     SHUFFLE_NO = 3
     DEFAULT_FITNESS = 10000
 
     def __init__(self,
                  size: int,
                  board: Board,
-                 elite: int,
-                 drop_out: int,
-                 crossover: int):
+                 elite: float,
+                 drop_out: float,
+                 crossover: float):
+        """
+        Initialises Generation class.
+
+        Arguments:
+            size {int} -- size of population.
+            board {Board} -- sudoku board.
+            elite {float} -- elitism coefficient.
+            drop_out {float} -- drop out coefficient.
+            crossover {float} -- crossover coefficient.
+        """
         self._elite = elite
         self._drop_out = drop_out
         self._crossover = crossover
@@ -185,7 +199,7 @@ class Generation():
         # elitism
         new_population += self._get_elite()
         # selection, crossover, mutation
-        for elem in range(int(self._size * (1 - self._elite))):
+        for elem in range(int(self._size * (1.0 - self._elite))):
             fittest_parents = self._select_fittest()
             new_population.append([self._create_child(*fittest_parents),
                                    Generation.DEFAULT_FITNESS])
