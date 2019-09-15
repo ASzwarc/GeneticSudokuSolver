@@ -4,12 +4,27 @@ from solver.generation import Generation
 
 
 class GeneticSolver():
+    """
+    A class holding all elements of genetic algorithm and
+    responsible for running it.
+    """
     def __init__(self,
                  board: Board,
                  population_size: int,
                  elitism: int,
                  drop_out: int,
                  crossover: int):
+        """
+        Initialises GeneticSolver.
+
+        Arguments:
+            board {Board} -- Sudoku board.
+            population_size {int} -- number of chromosomes.
+            elitism {int} -- coefficient indicating proportion of elite
+            chromosomes.
+            drop_out {int} -- coefficient  of dropped out chromosomes.
+            crossover {int} -- probability of crossover.
+        """
         self._board = board
         self._generation = Generation(population_size,
                                       self._board,
@@ -18,6 +33,10 @@ class GeneticSolver():
                                       crossover)
 
     def run(self):
+        """
+        Function that executes genetic algorithm and prints progress and final
+        result.
+        """
         max_no_of_generations = 10000
         generation_no = 0
         start_time = time.time()
