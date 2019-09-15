@@ -1,6 +1,6 @@
 from __future__ import annotations
 import numpy as np
-from random import shuffle, choices, random
+from random import shuffle, choices, random, randint
 from solver.board import Board
 
 
@@ -170,17 +170,16 @@ class Generation():
         Returns:
             np.array -- newly created child.
         """
-        # TODO Think how crossover point should look like!!!
         child = np.empty((9, 9), dtype=np.int8)
         for row in range(9):
-            random_number = random()
-            if random_number <= self._crossover:
-                child[row] = parent1[row, :].copy()
-            elif random_number <= (2.0 * self._crossover):
-                child[row] = parent2[row, :].copy()
-            else:
-                child[row] = np.array(self._generate_row(),
-                                      dtype=np.int8).copy()
+            for col in range(9):
+                random_number = random()
+                if random_number <= self._crossover:
+                    child[row, col] = parent1[row, col].copy()
+                elif random_number <= (2.0 * self._crossover):
+                    child[row, col] = parent2[row, col].copy()
+                else:
+                    child[row, col] = randint(1, 9)
         return child
 
     def evolve(self):
