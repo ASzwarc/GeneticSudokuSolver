@@ -1,27 +1,35 @@
 import unittest
-from main import Generation, Board, Item, DEFAULT_FITNESS
+from solver.generation import Generation
+from solver.board import Board, Item
 import numpy as np
 
 
-# TODO refactor this tests!!!
 class TestComputeFitness(unittest.TestCase):
     def setUp(self):
+        self.ELITE_COEFF = 1
+        self.DROP_OUT_COEFF = 1
+        self.CROSSOVER = 1
         self.population_size = 1
         self.board = Board()
-        self.generation = Generation(self.population_size, self.board)
+        self.generation = Generation(self.population_size,
+                                     self.board,
+                                     self.ELITE_COEFF,
+                                     self.DROP_OUT_COEFF,
+                                     self.CROSSOVER)
         self.sample_no = 0
+        self.DEFAULT_FITNESS = 10000
 
     def test_values_in_rows_and_columns_incorrect(self):
         self.generation._population[self.sample_no] = [np.array(
-            [1 for _ in range(81)], dtype=np.int8), DEFAULT_FITNESS]
+            [1 for _ in range(81)], dtype=np.int8), self.DEFAULT_FITNESS]
         self.generation.compute_chromosome_fitness(self.sample_no)
-        self.assertEqual(972,
+        self.assertEqual(9612,
                          self.generation._population[self.sample_no][1])
 
         self.generation._population[self.sample_no] = [np.array(
-            [9 for _ in range(81)], dtype=np.int8), DEFAULT_FITNESS]
+            [9 for _ in range(81)], dtype=np.int8), self.DEFAULT_FITNESS]
         self.generation.compute_chromosome_fitness(self.sample_no)
-        self.assertEqual(972,
+        self.assertEqual(9612,
                          self.generation._population[self.sample_no][1])
 
     def test_values_in_rows_and_columns_correct(self):
@@ -35,7 +43,7 @@ class TestComputeFitness(unittest.TestCase):
                   6, 2, 5, 9, 4, 8, 1, 3, 7,
                   8, 7, 3, 5, 1, 2, 9, 6, 4]
         self.generation._population[self.sample_no] = [np.array(
-            sample, dtype=np.int8), DEFAULT_FITNESS]
+            sample, dtype=np.int8), self.DEFAULT_FITNESS]
         self.generation.compute_chromosome_fitness(self.sample_no)
         self.assertEqual(
             0, self.generation._population[self.sample_no][1])
@@ -66,10 +74,10 @@ class TestComputeFitness(unittest.TestCase):
                   6, 2, 5, 9, 4, 8, 1, 3, 7,
                   8, 7, 3, 5, 1, 2, 9, 6, 1]
         self.generation._population[self.sample_no] = [np.array(
-            sample, dtype=np.int8), DEFAULT_FITNESS]
+            sample, dtype=np.int8), self.DEFAULT_FITNESS]
         self.generation.compute_chromosome_fitness(self.sample_no)
         self.assertEqual(
-            1176, self.generation._population[self.sample_no][1])
+            2336, self.generation._population[self.sample_no][1])
 
     def test_known_values_correct(self):
         known_items = []
@@ -97,7 +105,7 @@ class TestComputeFitness(unittest.TestCase):
                   6, 2, 5, 9, 4, 8, 1, 3, 7,
                   8, 7, 3, 5, 1, 2, 9, 6, 4]
         self.generation._population[self.sample_no] = [np.array(
-            sample, dtype=np.int8), DEFAULT_FITNESS]
+            sample, dtype=np.int8), self.DEFAULT_FITNESS]
         self.generation.compute_chromosome_fitness(self.sample_no)
         self.assertEqual(
             0, self.generation._population[self.sample_no][1])
