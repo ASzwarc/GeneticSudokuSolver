@@ -3,21 +3,19 @@ from solver.board import Board
 from solver.generation import Generation
 
 
-POPULATION_SIZE = 20
-ELITISM_COEFF = 0.1
-DROP_OUT_COEFF = 0.5
-MUTATION_PROBABILITY = 0.1
-CROSSOVER_PROBABILITY = (1.0 - MUTATION_PROBABILITY) / 2.0
-
-
 class GeneticSolver():
-    def __init__(self, board: Board):
+    def __init__(self,
+                 board: Board,
+                 population_size: int,
+                 elitism: int,
+                 drop_out: int,
+                 crossover: int):
         self._board = board
-        self._generation = Generation(POPULATION_SIZE,
+        self._generation = Generation(population_size,
                                       self._board,
-                                      ELITISM_COEFF,
-                                      DROP_OUT_COEFF,
-                                      CROSSOVER_PROBABILITY)
+                                      elitism,
+                                      drop_out,
+                                      crossover)
 
     def run(self):
         max_no_of_generations = 10000
