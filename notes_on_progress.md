@@ -35,3 +35,15 @@ Parameters:
 - DROP_OUT_COEFF = 0.4
 - MUTATION_PROBABILITY = 0.3
 - CROSSOVER_PROBABILITY = (1.0 - MUTATION_PROBABILITY) / 2.0
+
+## Run #4
+Changed crossover point - instead of row it's cell.
+
+Running time: 92.762s
+<br>Best score: 3120
+
+- POPULATION_SIZE = 20
+- ELITISM_COEFF = 0.1
+- DROP_OUT_COEFF = 0.5
+- MUTATION_PROBABILITY = 0.2
+- CROSSOVER_PROBABILITY = (1.0 - MUTATION_PROBABILITY) / 2.0
