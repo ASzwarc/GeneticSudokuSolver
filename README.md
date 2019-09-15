@@ -4,7 +4,7 @@
 Goal of this project is to create genetic algorithm which will solve sudoku. I have never written genetic algorithm before so this should be fun...
 
 # TODO
-- [ ] Basic structure
+- [x] Basic structure
 - [x] Generation of Sudoku board
 - [x] Fitness function
 - [x] Genetic algorithm
