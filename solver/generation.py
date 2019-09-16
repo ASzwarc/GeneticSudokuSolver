@@ -192,7 +192,7 @@ class Generation():
         for elem in range(int(self._size * (1.0 - self._elite))):
             fittest_parents = self._select_fittest()
             new_population.append([self._create_child(
-                cross_fun.row_crossover,
+                cross_fun.square_crossover,
                 *fittest_parents,
                 self._crossover),
                                    Generation.DEFAULT_FITNESS])
