@@ -10,6 +10,7 @@ class GeneticSolver():
     """
     def __init__(self,
                  board: Board,
+                 max_generations: int,
                  population_size: int,
                  elitism: int,
                  drop_out: int,
@@ -19,6 +20,7 @@ class GeneticSolver():
 
         Arguments:
             board {Board} -- Sudoku board.
+            max_generations {int} -- maximal number of generations to run.
             population_size {int} -- number of chromosomes.
             elitism {int} -- coefficient indicating proportion of elite
             chromosomes.
@@ -26,6 +28,7 @@ class GeneticSolver():
             crossover {int} -- probability of crossover.
         """
         self._board = board
+        self._max_generations = max_generations
         self._generation = Generation(population_size,
                                       self._board,
                                       elitism,
@@ -37,10 +40,9 @@ class GeneticSolver():
         Function that executes genetic algorithm and prints progress and final
         result.
         """
-        max_no_of_generations = 10000
         generation_no = 0
         start_time = time.time()
-        while generation_no <= max_no_of_generations:
+        while generation_no <= self._max_generations:
             fittest = self._generation.evolve()
             if generation_no % 100 == 0:
                 print("-------------------------------------")
