@@ -2,6 +2,7 @@ from __future__ import annotations
 import numpy as np
 from random import shuffle, choices, random, randint
 from solver.board import Board
+import solver.crossover_functions as cross_fun
 
 
 class Generation():
@@ -159,7 +160,7 @@ class Generation():
                           k=parents_count)
         return [item[0] for item in fittest]
 
-    def _create_child(self, parent1, parent2):
+    def _create_child(self, function, parent1, parent2, crossover_probability):
         """
         Creates child using crossover or mutation (it depends on probability)
 
@@ -170,17 +171,7 @@ class Generation():
         Returns:
             np.array -- newly created child.
         """
-        child = np.empty((9, 9), dtype=np.int8)
-        for row in range(9):
-            for col in range(9):
-                random_number = random()
-                if random_number <= self._crossover:
-                    child[row, col] = parent1[row, col].copy()
-                elif random_number <= (2.0 * self._crossover):
-                    child[row, col] = parent2[row, col].copy()
-                else:
-                    child[row, col] = randint(1, 9)
-        return child
+        return function(parent1, parent2, crossover_probability)
 
     def evolve(self):
         """
@@ -200,7 +191,10 @@ class Generation():
         # selection, crossover, mutation
         for elem in range(int(self._size * (1.0 - self._elite))):
             fittest_parents = self._select_fittest()
-            new_population.append([self._create_child(*fittest_parents),
+            new_population.append([self._create_child(
+                cross_fun.row_crossover,
+                *fittest_parents,
+                self._crossover),
                                    Generation.DEFAULT_FITNESS])
         self._population = new_population.copy()
         return fittest_chromosome
