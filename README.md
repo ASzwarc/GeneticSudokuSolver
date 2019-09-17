@@ -4,10 +4,8 @@
 Goal of this project is to create genetic algorithm which will solve sudoku. I have never written genetic algorithm before so this should be fun...
 
 # Found issues
-- For some reason genetic algorithm doesn't work (I know that it's not the best algorithm for problems
-like that...)
-- Adding new sudoku board is annoying. It would be better if used could provide screenshot of the board and
-program would "read" the board and inject data into program.
+- For some reason genetic algorithm doesn't work (I know that it's not the best algorithm for problems like that...)
+- Adding new sudoku board is annoying. It would be better if used could provide screenshot of the board and program would "read" the board and inject data into program.
 
 # TODO
 ## Algorithm
