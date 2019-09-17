@@ -2,7 +2,6 @@ from __future__ import annotations
 import numpy as np
 from random import shuffle, choices, random, randint
 from solver.board import Board
-import solver.crossover_functions as cross_fun
 
 
 class Generation():
@@ -18,7 +17,8 @@ class Generation():
                  board: Board,
                  elite: float,
                  drop_out: float,
-                 crossover: float):
+                 crossover: float,
+                 crossover_func):
         """
         Initialises Generation class.
 
@@ -34,6 +34,7 @@ class Generation():
         self._crossover = crossover
         self._board = board
         self._size = size
+        self._crossover_func = crossover_func
         self._population = [self.generate_chromosome()
                             for _ in range(self._size)]
 
@@ -192,7 +193,7 @@ class Generation():
         for elem in range(int(self._size * (1.0 - self._elite))):
             fittest_parents = self._select_fittest()
             new_population.append([self._create_child(
-                cross_fun.square_crossover,
+                self._crossover_func,
                 *fittest_parents,
                 self._crossover),
                                    Generation.DEFAULT_FITNESS])

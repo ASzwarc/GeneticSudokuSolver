@@ -14,7 +14,8 @@ class GeneticSolver():
                  population_size: int,
                  elitism: int,
                  drop_out: int,
-                 crossover: int):
+                 crossover: int,
+                 crossover_func):
         """
         Initialises GeneticSolver.
 
@@ -33,7 +34,8 @@ class GeneticSolver():
                                       self._board,
                                       elitism,
                                       drop_out,
-                                      crossover)
+                                      crossover,
+                                      crossover_func)
 
     def run(self):
         """
