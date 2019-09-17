@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Callable
 import numpy as np
 from random import shuffle, choices, random, randint
 from solver.board import Board
@@ -18,7 +19,8 @@ class Generation():
                  elite: float,
                  drop_out: float,
                  crossover: float,
-                 crossover_func):
+                 crossover_func: Callable[[np.array, np.array, float],
+                                          np.array]):
         """
         Initialises Generation class.
 
@@ -88,7 +90,6 @@ class Generation():
         # incorrect sum in row
         fitness += np.sum(v_calc_penalty(np.sum(sample, axis=1)))
         # incorrect sum in square
-        # TODO try to vectorize it
         for row in range(0, 9, 3):
             for col in range(0, 9, 3):
                 fitness += abs(45 - np.sum(sample[row:row+3, col:col+3]))
@@ -161,13 +162,18 @@ class Generation():
                           k=parents_count)
         return [item[0] for item in fittest]
 
-    def _create_child(self, function, parent1, parent2, crossover_probability):
+    def _create_child(self, function, parent1, parent2,
+                      crossover_probability: float):
         """
         Creates child using crossover or mutation (it depends on probability)
 
         Arguments:
+            function {Callable[[np.array, np.array, float], np.array]} --
+            function for doing crossover of chromosomes.
             parent1 {np.array} -- first parent.
             parent2 {np.array} -- second parent.
+            crossover_probability {float} -- probability level for chosing
+            either parent1 or parent2.
 
         Returns:
             np.array -- newly created child.

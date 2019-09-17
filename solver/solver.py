@@ -1,3 +1,4 @@
+from typing import Callable
 import time
 from solver.board import Board
 from solver.generation import Generation
@@ -12,10 +13,11 @@ class GeneticSolver():
                  board: Board,
                  max_generations: int,
                  population_size: int,
-                 elitism: int,
-                 drop_out: int,
-                 crossover: int,
-                 crossover_func):
+                 elitism: float,
+                 drop_out: float,
+                 crossover: float,
+                 crossover_func: Callable[[np.array, np.array, float],
+                                          np.array]):
         """
         Initialises GeneticSolver.
 
@@ -23,10 +25,12 @@ class GeneticSolver():
             board {Board} -- Sudoku board.
             max_generations {int} -- maximal number of generations to run.
             population_size {int} -- number of chromosomes.
-            elitism {int} -- coefficient indicating proportion of elite
+            elitism {float} -- coefficient indicating proportion of elite
             chromosomes.
-            drop_out {int} -- coefficient  of dropped out chromosomes.
-            crossover {int} -- probability of crossover.
+            drop_out {float} -- coefficient  of dropped out chromosomes.
+            crossover {float} -- probability of crossover.
+            crossover_func {Callable[[np.array, np.array, float], np.array]} --
+            function that will be use for crossover
         """
         self._board = board
         self._max_generations = max_generations
