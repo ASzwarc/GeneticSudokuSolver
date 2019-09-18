@@ -19,8 +19,7 @@ class Generation():
                  elite: float,
                  drop_out: float,
                  crossover: float,
-                 crossover_func: Callable[[np.array, np.array, float],
-                                          np.array]):
+                 crossover_func: Callable):
         """
         Initialises Generation class.
 
@@ -30,6 +29,8 @@ class Generation():
             elite {float} -- elitism coefficient.
             drop_out {float} -- drop out coefficient.
             crossover {float} -- crossover coefficient.
+            crossover_func {Callable[[np.array, np.array, float], np.array]} --
+            function that will be use for crossover
         """
         self._elite = elite
         self._drop_out = drop_out

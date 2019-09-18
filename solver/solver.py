@@ -16,8 +16,7 @@ class GeneticSolver():
                  elitism: float,
                  drop_out: float,
                  crossover: float,
-                 crossover_func: Callable[[np.array, np.array, float],
-                                          np.array]):
+                 crossover_func: Callable):
         """
         Initialises GeneticSolver.
 
