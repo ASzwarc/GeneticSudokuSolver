@@ -16,7 +16,7 @@ class GeneticSolver():
                  elitism: float,
                  drop_out: float,
                  crossover: float,
-                 crossover_func: Callable):
+                 crossover_func: Callable) -> None:
         """
         Initialises GeneticSolver.
 
@@ -40,7 +40,7 @@ class GeneticSolver():
                                       crossover,
                                       crossover_func)
 
-    def run(self):
+    def run(self) -> None:
         """
         Function that executes genetic algorithm and prints progress and final
         result.
