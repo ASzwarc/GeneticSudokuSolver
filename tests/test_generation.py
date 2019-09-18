@@ -4,6 +4,10 @@ from solver.board import Board, Item
 import numpy as np
 
 
+def dummy_crossover_function(parent1, parent2, cross_probability: float):
+    return None
+
+
 class TestComputeFitness(unittest.TestCase):
     def setUp(self):
         self.ELITE_COEFF = 1
@@ -15,7 +19,8 @@ class TestComputeFitness(unittest.TestCase):
                                      self.board,
                                      self.ELITE_COEFF,
                                      self.DROP_OUT_COEFF,
-                                     self.CROSSOVER)
+                                     self.CROSSOVER,
+                                     dummy_crossover_function)
         self.sample_no = 0
         self.DEFAULT_FITNESS = 10000
 
