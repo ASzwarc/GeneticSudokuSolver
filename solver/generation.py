@@ -47,12 +47,13 @@ class Generation():
         constant SHUFFLE_NO.
 
         Returns:
-            List[int] -- random row.
+            List[int] -- random row with correct fixed values.
         """
         sample = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        known_values = self._board.board[row_no]
         for _ in range(Generation.SHUFFLE_NO):
             shuffle(sample)
-        return sample
+        return [known_values[i] if i > 0 else sample[i] for i in range(9)]
 
     def generate_chromosome(self) -> List:
         """
@@ -94,6 +95,8 @@ class Generation():
         for row in range(0, 9, 3):
             for col in range(0, 9, 3):
                 fitness += abs(45 - np.sum(sample[row:row+3, col:col+3]))
+        # TODO it will be removed in the future.
+        # Right now it's needed to compare with previous runs.
         # incorrect known item
         for row, line in enumerate(self._board.board):
             for col, val in enumerate(line):
@@ -180,7 +183,19 @@ class Generation():
         Returns:
             np.array -- newly created child.
         """
-        return function(parent1, parent2, crossover_probability)
+        # TODO temporary solution to check if it works
+        child = np.empty((9, 9), dtype=np.int8)
+        for row in range(9):
+            random_number = random()
+            if random_number <= crossover_probability:
+                child[row, :] = parent1[row, :].copy()
+            elif random_number <= (2.0 * crossover_probability):
+                child[row, :] = parent2[row, :].copy()
+            else:
+                child[row, :] = np.array(self._generate_row(row),
+                                         dtype=np.int8).copy()
+        return child
+        # return function(parent1, parent2, crossover_probability)
 
     def evolve(self) -> List:
         """

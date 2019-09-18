@@ -86,3 +86,16 @@ ELITISM_COEFF = 0.05
 DROP_OUT_COEFF = 0.7
 MUTATION_PROBABILITY = 0.3
 CROSSOVER_PROBABILITY = (1.0 - MUTATION_PROBABILITY) / 2.0
+
+## Run #8
+New approach - fixed values are not guessed. Row as a crossover point. It looks like something is not working as it should...
+
+Running time: 214.787s
+<br>Best score: 4369
+
+MAX_GENERATIONS = 10000
+POPULATION_SIZE = 40
+ELITISM_COEFF = 0.1
+DROP_OUT_COEFF = 0.5
+MUTATION_PROBABILITY = 0.2
+CROSSOVER_PROBABILITY = (1.0 - MUTATION_PROBABILITY) / 2.0
