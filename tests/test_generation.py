@@ -1,6 +1,6 @@
 import unittest
 from solver.generation import Generation
-from solver.board import Board, Item
+from solver.board import Board
 import numpy as np
 
 
@@ -55,19 +55,16 @@ class TestComputeFitness(unittest.TestCase):
 
     def test_known_values_incorrect(self):
         known_items = []
-        known_items.append(Item._make([0, 0, 1]))
-        known_items.append(Item._make([0, 3, 4]))
-        known_items.append(Item._make([0, 8, 6]))
-        known_items.append(Item._make([1, 1, 3]))
-        known_items.append(Item._make([1, 4, 5]))
-        known_items.append(Item._make([1, 7, 4]))
-        known_items.append(Item._make([2, 2, 8]))
-        known_items.append(Item._make([2, 5, 1]))
-        known_items.append(Item._make([2, 6, 2]))
-        known_items.append(Item._make([4, 0, 5]))
-        known_items.append(Item._make([6, 1, 1]))
-        known_items.append(Item._make([8, 8, 4]))
-        self.board._items = known_items
+        known_items.append([1, 0, 0, 4, 0, 0, 0, 0, 6])
+        known_items.append([0, 3, 0, 0, 5, 0, 0, 4, 0])
+        known_items.append([0, 0, 8, 0, 0, 1, 2, 0, 0])
+        known_items.append([0, 0, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([5, 0, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([0, 0, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([0, 1, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([0, 0, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([0, 0, 0, 0, 0, 0, 0, 0, 4])
+        self.board._board = known_items
 
         sample = [9, 5, 2, 5, 8, 9, 3, 7, 1,
                   7, 1, 9, 2, 9, 6, 8, 3, 1,
@@ -86,19 +83,16 @@ class TestComputeFitness(unittest.TestCase):
 
     def test_known_values_correct(self):
         known_items = []
-        known_items.append(Item._make([0, 0, 1]))
-        known_items.append(Item._make([0, 3, 4]))
-        known_items.append(Item._make([0, 8, 6]))
-        known_items.append(Item._make([1, 1, 3]))
-        known_items.append(Item._make([1, 4, 5]))
-        known_items.append(Item._make([1, 7, 4]))
-        known_items.append(Item._make([2, 2, 8]))
-        known_items.append(Item._make([2, 5, 1]))
-        known_items.append(Item._make([2, 6, 2]))
-        known_items.append(Item._make([4, 0, 5]))
-        known_items.append(Item._make([6, 1, 1]))
-        known_items.append(Item._make([8, 8, 4]))
-        self.board._items = known_items
+        known_items.append([1, 0, 0, 4, 0, 0, 0, 0, 6])
+        known_items.append([0, 3, 0, 0, 5, 0, 0, 4, 0])
+        known_items.append([0, 0, 8, 0, 0, 1, 2, 0, 0])
+        known_items.append([0, 0, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([5, 0, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([0, 0, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([0, 1, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([0, 0, 0, 0, 0, 0, 0, 0, 0])
+        known_items.append([0, 0, 0, 0, 0, 0, 0, 0, 4])
+        self.board._board = known_items
 
         sample = [1, 5, 2, 4, 8, 9, 3, 7, 6,
                   7, 3, 9, 2, 5, 6, 8, 4, 1,

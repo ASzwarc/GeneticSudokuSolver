@@ -41,7 +41,7 @@ class Generation():
         self._population = [self.generate_chromosome()
                             for _ in range(self._size)]
 
-    def _generate_row(self) -> List[int]:
+    def _generate_row(self, row_no: int) -> List[int]:
         """
         Generates random row by shuffling sample number of times defined by
         constant SHUFFLE_NO.
@@ -62,7 +62,7 @@ class Generation():
             List[np.array, default_fitness] -- Randomly generated chromosome
             with default fitness assigned.
         """
-        return [np.array([self._generate_row() for _ in range(9)],
+        return [np.array([self._generate_row(row_no) for row_no in range(9)],
                          dtype=np.int8), Generation.DEFAULT_FITNESS]
 
     def compute_chromosome_fitness(self, sample_no: int) -> None:
@@ -95,9 +95,10 @@ class Generation():
             for col in range(0, 9, 3):
                 fitness += abs(45 - np.sum(sample[row:row+3, col:col+3]))
         # incorrect known item
-        for item in self._board.items:
-            if sample[item.row, item.col] != item.value:
-                fitness += incorrect_fixed_value_penalty
+        for row, line in enumerate(self._board.board):
+            for col, val in enumerate(line):
+                if val != 0 and sample[row, col] != val:
+                    fitness += incorrect_fixed_value_penalty
         # duplicated values
         for row in range(9):
             fitness += calc_duplicates(sample[row, :]) * duplicate_penalty
